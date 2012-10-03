@@ -1,4 +1,4 @@
-package test.isim.sample.aws;
+package test.isim.sample.aws.bucket;
 
 import junit.framework.Assert;
 
