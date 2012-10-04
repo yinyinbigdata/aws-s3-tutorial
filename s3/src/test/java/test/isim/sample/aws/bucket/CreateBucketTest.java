@@ -77,7 +77,7 @@ public class CreateBucketTest {
    * @see http://docs.amazonwebservices.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/s3/model/Grantee.html
    */
   @Test
-  public void testCreateBucket_AccessControlWithBadEmails(){
+  public void testCreateBucket_AssignAccessControlWithBadEmails(){
     CreateBucketRequest createRequest = new CreateBucketRequest(newBucketName);
     AccessControlList aclist = new AccessControlList();
     aclist.grantAllPermissions(
