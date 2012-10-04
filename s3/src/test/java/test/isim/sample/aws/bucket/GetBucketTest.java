@@ -1,26 +1,26 @@
 package test.isim.sample.aws.bucket;
 
+import java.io.IOException;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 
 public class GetBucketTest {
-  private String awsAccessKeyID;
-  private String awsSecretKey;
-  private AWSCredentials credentials;
   private AmazonS3 s3client;
   
   @Before
-  public void setUp(){
-    awsAccessKeyID = "";
-    awsSecretKey = "";
-    credentials = new BasicAWSCredentials(awsAccessKeyID, awsSecretKey);
+  public void setUp() throws IOException{
+    initS3ClientWithCredentials();
+  }
+  
+  private void initS3ClientWithCredentials() throws IOException {
+    PropertiesCredentials credentials = new PropertiesCredentials(CreateBucketTest.class.getResourceAsStream("/credentials.properties"));
     s3client = new AmazonS3Client(credentials);
   }
 

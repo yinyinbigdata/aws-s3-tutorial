@@ -1,5 +1,6 @@
 package test.isim.sample.aws.bucket;
 
+import java.io.IOException;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -12,8 +13,7 @@ import org.junit.rules.ExpectedException;
 import test.isim.sample.aws.factory.TestAccessControlGrantPermissionFactory;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AccessControlList;
@@ -22,19 +22,21 @@ import com.amazonaws.services.s3.model.CreateBucketRequest;
 
 public class CreateBucketTest {
   private String newBucketName = "ivan-test-bucket";
-  private String awsAccessKeyID;
-  private String awsSecretKey;
-  private AWSCredentials credentials;
   private AmazonS3 s3client;
   private ExpectedException expectedException = ExpectedException.none();
   
   @Before
-  public void setUp(){
-    awsAccessKeyID = "";
-    awsSecretKey = "";
-    credentials = new BasicAWSCredentials(awsAccessKeyID, awsSecretKey);
+  public void setUp() throws IOException{
+    initS3ClientWithCredentials();
+    generateDistinctBucketName();
+  }
+
+  private void initS3ClientWithCredentials() throws IOException {
+    PropertiesCredentials credentials = new PropertiesCredentials(CreateBucketTest.class.getResourceAsStream("/credentials.properties"));
     s3client = new AmazonS3Client(credentials);
-    
+  }
+  
+  private void generateDistinctBucketName() {
     Date now = new Date();
     newBucketName = newBucketName.concat("-").concat(new Long(now.getTime()).toString());
   }

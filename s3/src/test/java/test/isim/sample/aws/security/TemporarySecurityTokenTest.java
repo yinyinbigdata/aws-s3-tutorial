@@ -1,15 +1,17 @@
 package test.isim.sample.aws.security;
 
+import java.io.IOException;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import test.isim.sample.aws.bucket.CreateBucketTest;
 import test.isim.sample.aws.factory.TestS3PolicyStatementFactory;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.BasicSessionCredentials;
+import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Statement;
 import com.amazonaws.services.s3.AmazonS3;
@@ -23,24 +25,21 @@ import com.amazonaws.services.securitytoken.model.GetFederationTokenResult;
 public class TemporarySecurityTokenTest {
   private static final int TOKEN_TIME_TO_LIVE = 7200; // secs
   
-  private String awsAccessKeyID;
-  private String awsSecretKey;
-  private String testBucket;
-  private AWSCredentials credentials;
+  private String testBucket = "ivan-test-bucket";
   private AWSSecurityTokenServiceClient stsClient;
   private AmazonS3 fixtureClient;
   
   @Before
-  public void setUp(){
-    awsAccessKeyID = "";
-    awsSecretKey = "";
-    credentials = new BasicAWSCredentials(awsAccessKeyID, awsSecretKey);
-    
+  public void setUp() throws IOException{
     testBucket = "ivan-test-bucket";
-    fixtureClient = new AmazonS3Client(credentials);
+    fixtureClient = new AmazonS3Client(loadCredentials());
     fixtureClient.createBucket(testBucket);
     
-    stsClient = new AWSSecurityTokenServiceClient(credentials);
+    stsClient = new AWSSecurityTokenServiceClient(loadCredentials());
+  }
+  
+  private PropertiesCredentials loadCredentials() throws IOException {
+    return new PropertiesCredentials(CreateBucketTest.class.getResourceAsStream("/credentials.properties"));
   }
   
   @After
