@@ -7,11 +7,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import test.isim.sample.aws.bucket.CreateBucketTest;
 import test.isim.sample.aws.factory.TestS3PolicyStatementFactory;
+import test.isim.sample.aws.resource.CredentialsResourceProvider;
 
 import com.amazonaws.auth.BasicSessionCredentials;
-import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Statement;
 import com.amazonaws.services.s3.AmazonS3;
@@ -32,16 +31,12 @@ public class TemporarySecurityTokenTest {
   @Before
   public void setUp() throws IOException{
     testBucket = "ivan-test-bucket";
-    fixtureClient = new AmazonS3Client(loadCredentials());
+    fixtureClient = new AmazonS3Client(CredentialsResourceProvider.loadCredentialsResource());
     fixtureClient.createBucket(testBucket);
     
-    stsClient = new AWSSecurityTokenServiceClient(loadCredentials());
+    stsClient = new AWSSecurityTokenServiceClient(CredentialsResourceProvider.loadCredentialsResource());
   }
-  
-  private PropertiesCredentials loadCredentials() throws IOException {
-    return new PropertiesCredentials(CreateBucketTest.class.getResourceAsStream("/credentials.properties"));
-  }
-  
+
   @After
   public void tearDown(){
     if(fixtureClient.doesBucketExist(testBucket))

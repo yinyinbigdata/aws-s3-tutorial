@@ -6,12 +6,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import test.isim.sample.aws.bucket.CreateBucketTest;
+import test.isim.sample.aws.resource.CredentialsResourceProvider;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 
@@ -21,12 +20,8 @@ public class SimpleIAMSecurityTest {
 
   @Test
   public void testValidUserCredentials_ShouldSucceed() throws IOException{
-    s3client = new AmazonS3Client(loadCredentials());
+    s3client = new AmazonS3Client(CredentialsResourceProvider.loadCredentialsResource());
     Assert.assertNotNull(s3client.listBuckets());
-  }
-
-  private PropertiesCredentials loadCredentials() throws IOException {
-    return new PropertiesCredentials(CreateBucketTest.class.getResourceAsStream("/credentials.properties"));
   }
   
   @Test

@@ -7,7 +7,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.amazonaws.auth.PropertiesCredentials;
+import test.isim.sample.aws.resource.CredentialsResourceProvider;
+
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 
@@ -20,8 +21,7 @@ public class GetBucketTest {
   }
   
   private void initS3ClientWithCredentials() throws IOException {
-    PropertiesCredentials credentials = new PropertiesCredentials(CreateBucketTest.class.getResourceAsStream("/credentials.properties"));
-    s3client = new AmazonS3Client(credentials);
+    s3client = new AmazonS3Client(CredentialsResourceProvider.loadCredentialsResource());
   }
 
   @Test
