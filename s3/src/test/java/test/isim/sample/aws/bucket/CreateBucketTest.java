@@ -91,9 +91,10 @@ public class CreateBucketTest {
     
     try {
       s3client.createBucket(createRequest);
+      Assert.fail("Expected exception did not occur");
     } catch(Exception e){
       expectedException.expect(AmazonServiceException.class);
-      expectedException.expectMessage("The e-mail address you provided does not match any account on record.");
+      expectedException.expectMessage("AWS Error Code: UnresolvableGrantByEmailAddress");
     }
   }
 }
