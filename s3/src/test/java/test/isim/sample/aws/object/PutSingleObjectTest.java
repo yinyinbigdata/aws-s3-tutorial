@@ -33,6 +33,7 @@ public class PutSingleObjectTest {
 
   @After
   public void tearDown(){
+    s3client.deleteObject(bucketName, objectKey);
     if(s3client.doesBucketExist(bucketName))
       s3client.deleteBucket(bucketName);
   }
