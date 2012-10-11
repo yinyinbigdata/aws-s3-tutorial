@@ -26,16 +26,13 @@ public class PutSingleObjectTest {
   @Before
   public void setUp() throws IOException{
     initS3ClientWithCredentials();
-    createTestBucketFixture();
-    generateDistinctObjectKey();
-    generateDistinctFileName();
+    initFixtures();
   }
 
-  @After
-  public void tearDown(){
-    s3client.deleteObject(bucketName, objectKey);
-    if(s3client.doesBucketExist(bucketName))
-      s3client.deleteBucket(bucketName);
+  private void initFixtures() {
+    createTestBucket();
+    generateDistinctObjectKey();
+    generateDistinctFileName();
   }
 
   private void initS3ClientWithCredentials() throws IOException {
@@ -43,7 +40,7 @@ public class PutSingleObjectTest {
     s3client = new AmazonS3Client(credentials);
   }
   
-  private void createTestBucketFixture() {
+  private void createTestBucket() {
     s3client.createBucket(bucketName);
   }
   
@@ -52,7 +49,14 @@ public class PutSingleObjectTest {
   }
   
   private void generateDistinctFileName() {
-    fileName = fileName.concat("_").concat(Long.toString(new Date().getTime()));
+    fileName = fileName.concat("-").concat(Long.toString(new Date().getTime()));
+  }
+  
+  @After
+  public void tearDown(){
+    s3client.deleteObject(bucketName, objectKey);
+    if(s3client.doesBucketExist(bucketName))
+      s3client.deleteBucket(bucketName);
   }
 
   @Test
