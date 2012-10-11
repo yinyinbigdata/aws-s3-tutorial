@@ -11,9 +11,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import test.isim.sample.aws.factory.TestAccessControlGrantPermissionFactory;
+import test.isim.sample.aws.resource.CredentialsResourceProvider;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AccessControlList;
@@ -32,8 +32,7 @@ public class CreateBucketTest {
   }
 
   private void initS3ClientWithCredentials() throws IOException {
-    PropertiesCredentials credentials = new PropertiesCredentials(CreateBucketTest.class.getResourceAsStream("/credentials.properties"));
-    s3client = new AmazonS3Client(credentials);
+    s3client = new AmazonS3Client(CredentialsResourceProvider.loadCredentialsResource());
   }
   
   private void generateDistinctBucketName() {
@@ -91,9 +90,10 @@ public class CreateBucketTest {
     
     try {
       s3client.createBucket(createRequest);
+      Assert.fail("Expected exception did not occur");
     } catch(Exception e){
       expectedException.expect(AmazonServiceException.class);
-      expectedException.expectMessage("The e-mail address you provided does not match any account on record.");
+      expectedException.expectMessage("AWS Error Code: UnresolvableGrantByEmailAddress");
     }
   }
 }
