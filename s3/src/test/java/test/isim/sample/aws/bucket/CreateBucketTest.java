@@ -8,8 +8,10 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 
+import test.isim.sample.aws.category.ComponentTest;
 import test.isim.sample.aws.factory.TestAccessControlGrantPermissionFactory;
 import test.isim.sample.aws.resource.CredentialsResourceProvider;
 
@@ -20,6 +22,7 @@ import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
 
+@Category(ComponentTest.class)
 public class CreateBucketTest {
   private String newBucketName = "ivan-test-bucket";
   private AmazonS3 s3client;

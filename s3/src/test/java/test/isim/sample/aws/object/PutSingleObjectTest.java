@@ -9,14 +9,16 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import test.isim.sample.aws.bucket.CreateBucketTest;
+import test.isim.sample.aws.category.ComponentTest;
 
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.S3Object;
 
-
+@Category(ComponentTest.class)
 public class PutSingleObjectTest {
   private AmazonS3Client s3client;
   private String bucketName = "ivan-test-bucket";

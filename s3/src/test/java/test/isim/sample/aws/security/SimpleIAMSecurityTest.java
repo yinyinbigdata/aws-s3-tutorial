@@ -4,8 +4,10 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 
+import test.isim.sample.aws.category.ComponentTest;
 import test.isim.sample.aws.resource.CredentialsResourceProvider;
 
 import com.amazonaws.AmazonServiceException;
@@ -14,6 +16,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 
+@Category(ComponentTest.class)
 public class SimpleIAMSecurityTest {
   private AmazonS3 s3client;
   private ExpectedException expectedException = ExpectedException.none();

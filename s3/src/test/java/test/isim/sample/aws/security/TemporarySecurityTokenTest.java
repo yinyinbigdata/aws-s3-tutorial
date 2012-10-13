@@ -6,7 +6,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+import test.isim.sample.aws.category.ComponentTest;
 import test.isim.sample.aws.factory.TestS3PolicyStatementFactory;
 import test.isim.sample.aws.resource.CredentialsResourceProvider;
 
@@ -20,7 +22,7 @@ import com.amazonaws.services.securitytoken.model.Credentials;
 import com.amazonaws.services.securitytoken.model.GetFederationTokenRequest;
 import com.amazonaws.services.securitytoken.model.GetFederationTokenResult;
 
-
+@Category(ComponentTest.class)
 public class TemporarySecurityTokenTest {
   private static final int TOKEN_TIME_TO_LIVE = 7200; // secs
   
