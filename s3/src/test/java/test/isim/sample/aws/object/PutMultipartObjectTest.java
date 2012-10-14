@@ -10,10 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import test.isim.sample.aws.bucket.CreateBucketTest;
 import test.isim.sample.aws.category.ComponentTest;
+import test.isim.sample.aws.resource.CredentialsResourceProvider;
 
-import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.transfer.TransferManager;
@@ -35,12 +34,11 @@ public class PutMultipartObjectTest {
   }
 
   private void initS3ClientWithCredentials() throws IOException {
-    PropertiesCredentials credentials = new PropertiesCredentials(CreateBucketTest.class.getResourceAsStream("/credentials.properties"));
-    s3client = new AmazonS3Client(credentials);
+    s3client = new AmazonS3Client(CredentialsResourceProvider.loadCredentialsResource());
   }
   
   private void initTransferManagerWithCredentials() throws IOException {
-    transferManager = new TransferManager(new PropertiesCredentials(CreateBucketTest.class.getResourceAsStream("/credentials.properties")));
+    transferManager = new TransferManager(CredentialsResourceProvider.loadCredentialsResource());
   }
   
   private void initFixtures() {

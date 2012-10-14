@@ -11,10 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import test.isim.sample.aws.bucket.CreateBucketTest;
 import test.isim.sample.aws.category.ComponentTest;
+import test.isim.sample.aws.resource.CredentialsResourceProvider;
 
-import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.S3Object;
 
@@ -38,8 +37,7 @@ public class PutSingleObjectTest {
   }
 
   private void initS3ClientWithCredentials() throws IOException {
-    PropertiesCredentials credentials = new PropertiesCredentials(CreateBucketTest.class.getResourceAsStream("/credentials.properties"));
-    s3client = new AmazonS3Client(credentials);
+    s3client = new AmazonS3Client(CredentialsResourceProvider.loadCredentialsResource());
   }
   
   private void createTestBucket() {
