@@ -1,6 +1,5 @@
 package test.isim.sample.aws.object;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -12,6 +11,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import test.isim.sample.aws.category.ComponentTest;
+import test.isim.sample.aws.factory.TestS3ObjectFactory;
 import test.isim.sample.aws.resource.CredentialsResourceProvider;
 
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -22,7 +22,6 @@ public class PutSingleObjectTest {
   private AmazonS3Client s3client;
   private String bucketName = "ivan-test-bucket";
   private String objectKey = "ivan-test-object";
-  private String fileName = "ivan-test-file";
   
   @Before
   public void setUp() throws IOException{
@@ -33,7 +32,6 @@ public class PutSingleObjectTest {
   private void initFixtures() {
     createTestBucket();
     generateDistinctObjectKey();
-    generateDistinctFileName();
   }
 
   private void initS3ClientWithCredentials() throws IOException {
@@ -48,10 +46,6 @@ public class PutSingleObjectTest {
     objectKey = objectKey.concat("-").concat(Long.toString(new Date().getTime())); 
   }
   
-  private void generateDistinctFileName() {
-    fileName = fileName.concat("-").concat(Long.toString(new Date().getTime()));
-  }
-  
   @After
   public void tearDown(){
     s3client.deleteObject(bucketName, objectKey);
@@ -61,16 +55,18 @@ public class PutSingleObjectTest {
 
   @Test
   public void testPutObject_SingleObjectUpload_NotNull(){
-    File file = new File(fileName);
-    s3client.putObject(bucketName, objectKey, file);
+    s3client.putObject(bucketName, objectKey,
+        TestS3ObjectFactory.createTestInputContent(),
+        TestS3ObjectFactory.createDefaultObjectMetadata());
     S3Object uploadedObject = s3client.getObject(bucketName, objectKey);
     Assert.assertNotNull(uploadedObject);
   }
   
   @Test
   public void testPutObject_SingleObjectUpload_ContentNotNull(){
-    File file = new File(fileName);
-    s3client.putObject(bucketName, objectKey, file);
+    s3client.putObject(bucketName, objectKey,
+        TestS3ObjectFactory.createTestInputContent(),
+        TestS3ObjectFactory.createDefaultObjectMetadata());
     S3Object uploadedObject = s3client.getObject(bucketName, objectKey);
     Assert.assertNotNull(uploadedObject.getObjectContent());
   }

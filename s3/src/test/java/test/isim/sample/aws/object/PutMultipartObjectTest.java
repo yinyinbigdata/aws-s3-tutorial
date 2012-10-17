@@ -1,6 +1,5 @@
 package test.isim.sample.aws.object;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -11,6 +10,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import test.isim.sample.aws.category.ComponentTest;
+import test.isim.sample.aws.factory.TestS3ObjectFactory;
 import test.isim.sample.aws.resource.CredentialsResourceProvider;
 
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -24,7 +24,6 @@ public class PutMultipartObjectTest {
   private TransferManager transferManager;
   private String bucketName = "ivan-test-bucket";
   private String objectKey = "ivan-test-object";
-  private String fileName = "ivan-test-file";
   
   @Before
   public void setUp() throws IOException{
@@ -44,7 +43,6 @@ public class PutMultipartObjectTest {
   private void initFixtures() {
     createTestBucketFixture();
     generateDistinctObjectKey();
-    generateDistinctFileName();
   }
   
   private void createTestBucketFixture() {
@@ -55,10 +53,6 @@ public class PutMultipartObjectTest {
     objectKey = objectKey.concat("-").concat(Long.toString(new Date().getTime())); 
   }
   
-  private void generateDistinctFileName() {
-    fileName = fileName.concat("-").concat(Long.toString(new Date().getTime()));
-  }
-
   @After
   public void tearDown(){
     s3client.deleteObject(bucketName, objectKey);
@@ -68,8 +62,9 @@ public class PutMultipartObjectTest {
   
   @Test
   public void testSynchronousMultipartUpload_ObjectNotNull(){
-    File file = new File(fileName);
-    Upload upload = transferManager.upload(bucketName, objectKey, file);
+    Upload upload = transferManager.upload(bucketName, objectKey, 
+        TestS3ObjectFactory.createTestInputContent(), 
+        TestS3ObjectFactory.createDefaultObjectMetadata());
     try {
       upload.waitForCompletion();
       Assert.assertNotNull(s3client.getObject(bucketName, objectKey));
@@ -81,8 +76,9 @@ public class PutMultipartObjectTest {
   
   @Test
   public void testSynchronousMultipartUpload_ObjectContentNotNull(){
-    File file = new File(fileName);
-    Upload upload = transferManager.upload(bucketName, objectKey, file);
+    Upload upload = transferManager.upload(bucketName, objectKey, 
+        TestS3ObjectFactory.createTestInputContent(), 
+        TestS3ObjectFactory.createDefaultObjectMetadata());
     try {
       upload.waitForCompletion();
       S3Object uploadedObject = s3client.getObject(bucketName, objectKey);
