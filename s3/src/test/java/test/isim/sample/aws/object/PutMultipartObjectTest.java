@@ -105,6 +105,20 @@ public class PutMultipartObjectTest {
   }
   
   @Test
+  public void testSynchronousMultipartUpload_ObjectMetadataNotNull() {
+    Upload upload = transferManager.upload(bucketName, objectKey, inputContent, metadata);
+    
+    try {
+      upload.waitForCompletion();
+      S3Object uploadedObject = s3client.getObject(bucketName, objectKey);
+      Assert.assertNotNull(uploadedObject.getObjectMetadata());
+    } catch (Exception e) {
+      e.printStackTrace();
+      Assert.fail("Unexpected exception encountered while waiting for upload to complete");
+    }
+  }
+  
+  @Test
   public void testSynchronousMultipartUpload_ContentLengthMatches(){
     s3client.putObject(bucketName, objectKey, inputContent, metadata);
     

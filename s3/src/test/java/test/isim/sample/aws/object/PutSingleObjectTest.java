@@ -71,21 +71,28 @@ public class PutSingleObjectTest {
   }
 
   @Test
-  public void testPutObject_SingleSmallObjectUpload_NotNull() throws Exception{
+  public void testPutObject_SingleSmallObjectUpload_NotNull(){
     s3client.putObject(bucketName, objectKey, inputContent, metadata);
     S3Object uploadedObject = s3client.getObject(bucketName, objectKey);
     Assert.assertNotNull(uploadedObject);
   }
   
   @Test
-  public void testPutObject_SingleSmallObjectUpload_ContentNotNull() throws Exception{
+  public void testPutObject_SingleSmallObjectUpload_ContentNotNull(){
     s3client.putObject(bucketName, objectKey, inputContent, metadata);
     S3Object uploadedObject = s3client.getObject(bucketName, objectKey);
     Assert.assertNotNull(uploadedObject.getObjectContent());
   }
   
   @Test
-  public void testPutObject_SingleSmallObjectUpload_ContentLengthMatches() throws Exception{
+  public void testPutObject_SingleSmallObjectUpload_MetadataNotNull() {
+    s3client.putObject(bucketName, objectKey, inputContent, metadata);
+    S3Object uploadedObject = s3client.getObject(bucketName, objectKey);
+    Assert.assertNotNull(uploadedObject.getObjectMetadata());
+  }
+  
+  @Test
+  public void testPutObject_SingleSmallObjectUpload_ContentLengthMatches(){
     s3client.putObject(bucketName, objectKey, inputContent, metadata);
     
     try {
