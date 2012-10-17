@@ -54,20 +54,39 @@ public class PutSingleObjectTest {
   }
 
   @Test
-  public void testPutObject_SingleObjectUpload_NotNull(){
+  public void testPutObject_SingleSmallObjectUpload_NotNull(){
     s3client.putObject(bucketName, objectKey,
         TestS3ObjectFactory.createTestInputContent(),
-        TestS3ObjectFactory.createDefaultObjectMetadata());
+        TestS3ObjectFactory.createDefaultSmallObjectMetadata());
     S3Object uploadedObject = s3client.getObject(bucketName, objectKey);
     Assert.assertNotNull(uploadedObject);
   }
   
   @Test
-  public void testPutObject_SingleObjectUpload_ContentNotNull(){
+  public void testPutObject_SingleSmallObjectUpload_ContentNotNull(){
     s3client.putObject(bucketName, objectKey,
         TestS3ObjectFactory.createTestInputContent(),
-        TestS3ObjectFactory.createDefaultObjectMetadata());
+        TestS3ObjectFactory.createDefaultSmallObjectMetadata());
     S3Object uploadedObject = s3client.getObject(bucketName, objectKey);
     Assert.assertNotNull(uploadedObject.getObjectContent());
   }
+  
+  @Test
+  public void testPutObject_SingleSmallObjectUpload_ContentLengthMatches(){
+    s3client.putObject(bucketName, objectKey,
+        TestS3ObjectFactory.createTestInputContent(),
+        TestS3ObjectFactory.createDefaultSmallObjectMetadata());
+    S3Object uploadedObject = s3client.getObject(bucketName, objectKey);
+    
+    try {
+      int uploadedContentSize = uploadedObject.getObjectContent().read();
+      Assert.assertEquals(TestS3ObjectFactory.DEFAULT_SMALL_OBJECT_SIZE_IN_BYTES, 
+          uploadedContentSize);
+    } catch (IOException e) {
+      e.printStackTrace();
+      Assert.fail("Unexpected I/O exception");
+    }
+  }
+  
+  
 }

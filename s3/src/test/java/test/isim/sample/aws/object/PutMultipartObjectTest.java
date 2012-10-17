@@ -64,7 +64,7 @@ public class PutMultipartObjectTest {
   public void testSynchronousMultipartUpload_ObjectNotNull(){
     Upload upload = transferManager.upload(bucketName, objectKey, 
         TestS3ObjectFactory.createTestInputContent(), 
-        TestS3ObjectFactory.createDefaultObjectMetadata());
+        TestS3ObjectFactory.createDefaultSmallObjectMetadata());
     try {
       upload.waitForCompletion();
       Assert.assertNotNull(s3client.getObject(bucketName, objectKey));
@@ -78,7 +78,7 @@ public class PutMultipartObjectTest {
   public void testSynchronousMultipartUpload_ObjectContentNotNull(){
     Upload upload = transferManager.upload(bucketName, objectKey, 
         TestS3ObjectFactory.createTestInputContent(), 
-        TestS3ObjectFactory.createDefaultObjectMetadata());
+        TestS3ObjectFactory.createDefaultSmallObjectMetadata());
     try {
       upload.waitForCompletion();
       S3Object uploadedObject = s3client.getObject(bucketName, objectKey);
@@ -86,6 +86,23 @@ public class PutMultipartObjectTest {
     } catch (Exception e) {
       e.printStackTrace();
       Assert.fail("Unexpected exception encountered while waiting for upload to complete");
+    }
+  }
+  
+  @Test
+  public void testSynchronousMultipartUpload_ContentLengthMatches(){
+    s3client.putObject(bucketName, objectKey,
+        TestS3ObjectFactory.createTestInputContent(),
+        TestS3ObjectFactory.createDefaultSmallObjectMetadata());
+    S3Object uploadedObject = s3client.getObject(bucketName, objectKey);
+    
+    try {
+      int uploadedContentSize = uploadedObject.getObjectContent().read();
+      Assert.assertEquals(TestS3ObjectFactory.DEFAULT_SMALL_OBJECT_SIZE_IN_BYTES, 
+          uploadedContentSize);
+    } catch (IOException e) {
+      e.printStackTrace();
+      Assert.fail("Unexpected I/O exception");
     }
   }
 }
